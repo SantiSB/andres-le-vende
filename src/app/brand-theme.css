@@ -1,0 +1,349 @@
+/* Paleta tomada del logo entregado por Andrés: rojo, naranja y azul oscuro. */
+:root {
+  --brand-red: #ec4023;
+  --brand-orange: #ff9418;
+  --brand-navy: #1b2933;
+  --brand-red-dark: #b9311c;
+  --brand-soft: #fff0e8;
+  --ink: var(--brand-navy);
+  --muted: #59636b;
+  --line: #ebded5;
+  --paper: #fff9f5;
+  --green: var(--brand-navy);
+  --lime: var(--brand-orange);
+}
+
+body,
+.admin-shell {
+  background: var(--paper);
+}
+::selection {
+  background: #ffd09b;
+  color: var(--brand-navy);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-color: var(--brand-red);
+}
+
+/* El JPEG original conserva íntegros el símbolo y el nombre. */
+.brand {
+  display: block;
+  flex: 0 0 auto;
+  width: 225px;
+  height: auto;
+}
+.brand-logo {
+  display: block;
+  width: 100%;
+  height: 91px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 9px;
+  background: var(--brand-red);
+}
+.brand-custom {
+  display: block;
+  margin-top: 3px;
+  color: var(--brand-navy);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.public-header {
+  height: 118px;
+}
+.public-header .admin-link {
+  color: var(--brand-navy);
+}
+.public-header .admin-link:hover {
+  color: var(--brand-red-dark);
+}
+.eyebrow {
+  color: #9f422e;
+}
+.live-dot {
+  background: var(--brand-orange);
+}
+.hero h1 > span:not(.hero-star) {
+  color: var(--brand-red);
+}
+.hero .hero-star {
+  color: var(--brand-orange);
+}
+.hero-note svg {
+  color: var(--brand-red-dark);
+}
+.count {
+  border-color: #f2baa6;
+  color: var(--brand-red-dark);
+}
+.search:focus-within {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px #ec40231c;
+}
+
+.event-card:hover {
+  box-shadow: 0 10px 30px #1b29331a;
+}
+.poster {
+  background: var(--brand-navy);
+}
+.poster strong {
+  font-size: clamp(33px, 3vw, 43px);
+  line-height: 0.98;
+  max-height: none;
+  overflow: visible;
+}
+.poster-0 {
+  background:
+    radial-gradient(ellipse at 15% 95%, #f27036 0%, transparent 65%),
+    var(--brand-red);
+  color: #fffaf5;
+}
+.poster-0 .orbit-one {
+  border-color: var(--brand-orange);
+  box-shadow:
+    0 0 0 14px #ffb44b55,
+    0 0 0 30px #ffd58a35;
+}
+.poster-0 .orbit-two {
+  border-color: #fff1db;
+}
+.poster-1 {
+  background: var(--brand-navy);
+  color: #fff8f1;
+}
+.poster-1 .orbit-one {
+  border-color: var(--brand-orange);
+  box-shadow:
+    0 0 0 10px #ff941855,
+    0 0 0 35px #ff941826;
+}
+.poster-1 .orbit-two {
+  border-color: var(--brand-red);
+}
+.poster-2 {
+  background: linear-gradient(135deg, #ffb332, var(--brand-orange));
+  color: var(--brand-navy);
+}
+.poster-2 .orbit-one {
+  border-color: #fff2d0;
+  box-shadow: 0 0 0 15px #fff7;
+}
+.poster-2 .orbit-two {
+  border-color: var(--brand-red);
+}
+.poster-badge {
+  color: var(--brand-navy);
+}
+.price-line strong {
+  color: var(--brand-navy);
+}
+.whatsapp-btn {
+  background: #fff1e8;
+  border-color: #ffd5bd;
+  color: var(--brand-red-dark);
+}
+.whatsapp-btn:hover {
+  background: #ffe0cc;
+}
+.how-it-works {
+  background: #fff0e5;
+  border-color: #f4cdb9;
+}
+.how-step > span,
+.how-step > svg {
+  color: #cb5534;
+}
+.public-footer > span {
+  color: var(--brand-red-dark);
+}
+
+.btn {
+  background: var(--brand-navy);
+  border-color: var(--brand-navy);
+}
+.btn:hover {
+  background: var(--brand-red-dark);
+  border-color: var(--brand-red-dark);
+}
+.btn.secondary:hover,
+.icon-btn:hover {
+  background: #fff1e8;
+}
+.text-btn {
+  color: var(--brand-red-dark);
+}
+.text-btn:hover {
+  color: var(--brand-navy);
+}
+.badge.green {
+  background: #fff0e3;
+  color: #9e351c;
+}
+.badge.amber {
+  background: #fff0cb;
+  color: #785015;
+}
+.badge.neutral {
+  background: #f3f1ee;
+  color: #4c5960;
+}
+.green-text {
+  color: #a93420;
+}
+.toast {
+  background: var(--brand-navy);
+}
+.toast-error {
+  background: #a33424;
+}
+.modal {
+  border-color: var(--line);
+  box-shadow: 0 20px 80px #1b293333;
+}
+.modal::backdrop {
+  background: #1b293366;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline-color: var(--brand-red);
+}
+.checkbox input {
+  accent-color: var(--brand-red);
+}
+.price-helper,
+.reservation-context {
+  background: #fff1e8;
+}
+.profit-preview strong {
+  color: var(--brand-red-dark);
+}
+
+.sidebar .brand {
+  width: 208px;
+  height: auto;
+}
+.sidebar .brand-logo {
+  height: 84px;
+}
+.sidebar-label {
+  margin-top: 31px;
+}
+.nav-item {
+  color: #56616a;
+}
+.nav-item.selected {
+  background: #fff0e7;
+  color: #a83a20;
+}
+.nav-item:hover {
+  background: #fff5ee;
+}
+.avatar {
+  background: #ffe1bb;
+  border-color: #f8c994;
+  color: var(--brand-navy);
+}
+.stat:first-child {
+  background: var(--brand-navy);
+  border-color: var(--brand-navy);
+  color: #fff9f3;
+}
+.stat:first-child > div,
+.stat:first-child svg {
+  color: #ffb873;
+}
+.stat:not(:first-child) > div svg {
+  color: var(--brand-red-dark);
+}
+.event-thumb {
+  color: #fff;
+}
+.thumb-0 {
+  background: var(--brand-red);
+}
+.thumb-1 {
+  background: var(--brand-navy);
+  color: var(--brand-orange);
+}
+.thumb-2 {
+  background: var(--brand-orange);
+  color: var(--brand-navy);
+}
+.pending-icon {
+  background: #fff0dd;
+  color: #aa4327;
+}
+.panel-note {
+  background: #fffaf5;
+}
+.owner-avatar {
+  background: #ffe7d3;
+  color: #ad4127;
+}
+.lot-counts {
+  background: #fff7f0;
+}
+.lot-counts strong {
+  color: var(--brand-navy);
+}
+.lot-notes,
+.reservation-note {
+  background: #fff7f0;
+}
+.tabs button.active {
+  color: var(--brand-red-dark);
+  border-bottom-color: var(--brand-red);
+}
+.tabs button span {
+  background: #ffe4d4;
+}
+
+@media (max-width: 760px) {
+  .public-header {
+    height: 94px;
+  }
+  .brand {
+    width: 174px;
+    height: auto;
+  }
+  .brand-logo {
+    height: 73px;
+  }
+  .sidebar .brand {
+    width: 195px;
+    height: auto;
+    margin-bottom: 15px;
+  }
+  .sidebar .brand-logo {
+    height: 80px;
+  }
+  .public-header .brand {
+    max-width: none;
+  }
+  .poster strong {
+    font-size: clamp(34px, 11.2vw, 52px);
+  }
+}
+
+@media (max-width: 360px) {
+  .brand {
+    width: 158px;
+    height: auto;
+  }
+  .brand-logo {
+    height: 68px;
+  }
+  .admin-link {
+    font-size: 9px;
+  }
+}
