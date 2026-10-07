@@ -153,6 +153,9 @@ test("crear evento, localidad, inventario, reservar, cancelar, vender y persisti
     .locator(".reservation-card")
     .filter({ hasText: "Venta del flujo de prueba" });
   await reservation.getByRole("button", { name: "Completar venta" }).click();
+  dialog = page.getByRole("dialog", { name: "Completar venta" });
+  await dialog.getByRole("button", { name: "Confirmar venta" }).click();
+  await expect(dialog).not.toBeVisible();
   await page.getByRole("button", { name: "Historial", exact: true }).click();
   await expect(
     page

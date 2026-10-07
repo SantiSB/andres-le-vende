@@ -19,7 +19,10 @@ import {
   Package,
   Clock3,
   Banknote,
+  LogOut,
 } from "lucide-react";
+import { signOut } from "../app/ingresar/actions";
+import { isSupabaseConfigured } from "../lib/supabase/config";
 import { useStore } from "../state/store";
 import { catalog, profit, quantities } from "../domain/logic";
 import { cop, day, dateRange } from "../domain/format";
@@ -132,16 +135,16 @@ export function AdminShell({ children }: { children: ReactNode }) {
               path === href ||
               (href === "/admin/eventos" && path.startsWith("/admin/eventos/"));
             return (
-            <Link
-              aria-current={selected ? "page" : undefined}
-              className={`nav-item ${selected ? "selected" : ""}`}
-              href={href}
-              key={href}
-            >
-              <Icon size={20} />
-              <span className="nav-label">{label}</span>
-              <span className="nav-label-mobile">{mobileLabel}</span>
-            </Link>
+              <Link
+                aria-current={selected ? "page" : undefined}
+                className={`nav-item ${selected ? "selected" : ""}`}
+                href={href}
+                key={href}
+              >
+                <Icon size={20} />
+                <span className="nav-label">{label}</span>
+                <span className="nav-label-mobile">{mobileLabel}</span>
+              </Link>
             );
           })}
         </nav>
@@ -155,6 +158,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <Link href="/" className="nav-item">
             Ver catálogo público <ArrowUpRight size={18} />
           </Link>
+          {isSupabaseConfigured() && (
+            <form action={signOut}>
+              <button type="submit" className="nav-item">
+                Cerrar sesión <LogOut size={18} />
+              </button>
+            </form>
+          )}
         </div>
       </aside>
       <div className="admin-content">
@@ -166,7 +176,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <div className="admin-person">
             <Badge tone="amber">Modo demo</Badge>
             <span className="avatar">A</span>
-            <strong>Andrés</strong>
+            <strong>
+              {isSupabaseConfigured() ? "Administrador" : "Andrés"}
+            </strong>
           </div>
         </header>
         <main className="admin-main">
@@ -891,9 +903,10 @@ function CompleteSaleModal({
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const numericPrice = Number(price);
-  const total = Number.isSafeInteger(numericPrice) && numericPrice >= 0
-    ? numericPrice * reservation.quantity
-    : 0;
+  const total =
+    Number.isSafeInteger(numericPrice) && numericPrice >= 0
+      ? numericPrice * reservation.quantity
+      : 0;
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -933,7 +946,8 @@ function CompleteSaleModal({
           </strong>
           <p>
             {reservation.quantity} boleta(s) · precio publicado{" "}
-            {cop(reservation.listedUnitPrice ?? reservation.unitPrice)} por unidad
+            {cop(reservation.listedUnitPrice ?? reservation.unitPrice)} por
+            unidad
           </p>
         </div>
         <div className="field">
