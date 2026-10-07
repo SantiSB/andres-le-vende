@@ -10,11 +10,10 @@ import {
   ArrowRight,
   Ticket,
 } from "lucide-react";
-import { useStore } from "../state/store";
-import { catalog } from "../domain/logic";
 import { cop, dateRange, searchText } from "../domain/format";
 import { whatsappLink } from "../domain/whatsapp";
-import { Badge, DataGate, Empty, PublicHeader, WhatsAppAction } from "./ui";
+import type { PublicCatalog } from "../data/public-catalog";
+import { Empty, PublicHeader, WhatsAppAction } from "./ui";
 export function Poster({
   name,
   index,
@@ -52,10 +51,9 @@ export function Poster({
     </div>
   );
 }
-function CatalogContent() {
-  const db = useStore((s) => s.data)!;
+function CatalogContent({ data }: { data: PublicCatalog }) {
   const [search, setSearch] = useState("");
-  const events = catalog(db);
+  const events = data.events;
   const visible = events.filter((e) =>
     searchText(`${e.name} ${e.city} ${e.venue}`).includes(searchText(search)),
   );
@@ -140,8 +138,8 @@ function CatalogContent() {
                 <div className="localities">
                   {event.localities.map((locality) => {
                     const href = whatsappLink(
-                      db.settings.phone,
-                      db.settings.buyerTemplate,
+                      data.settings.phone,
+                      data.settings.buyerTemplate,
                       {
                         evento: event.name,
                         localidad: locality.name,
@@ -161,7 +159,7 @@ function CatalogContent() {
                           className="whatsapp-btn"
                           href={href}
                           label={`Consultar ${event.name}, ${locality.name} por WhatsApp`}
-                          missingMessage="Configura el WhatsApp de Andrés en el panel para probar este enlace."
+                          missingMessage="El WhatsApp de Andrés aún no está disponible. Intenta más tarde."
                         >
                           <MessageCircle size={18} />
                           <span>Consultar</span>
@@ -176,11 +174,23 @@ function CatalogContent() {
           ))}
         </div>
         {!visible.length && (
-          <Empty title="No encontramos ese plan">
-            <p>Prueba con otro evento, ciudad o lugar.</p>
-            <button className="btn secondary" onClick={() => setSearch("")}>
-              Ver todos los eventos
-            </button>
+          <Empty
+            title={
+              events.length
+                ? "No encontramos ese plan"
+                : "Aún no hay boletas disponibles"
+            }
+          >
+            <p>
+              {events.length
+                ? "Prueba con otro evento, ciudad o lugar."
+                : "Vuelve pronto para ver los próximos eventos."}
+            </p>
+            {events.length > 0 && (
+              <button className="btn secondary" onClick={() => setSearch("")}>
+                Ver todos los eventos
+              </button>
+            )}
           </Empty>
         )}
         <section className="how-it-works">
@@ -218,20 +228,16 @@ function CatalogContent() {
         </section>
       </main>
       <footer className="wrap public-footer">
-        <span>{db.settings.brand}</span>
-        <p>Eventos, fechas y precios de demostración.</p>
-        <Badge tone="neutral">Demo interactivo</Badge>
+        <span>{data.settings.brand}</span>
       </footer>
     </>
   );
 }
-export function Catalog() {
+export function Catalog({ publicData }: { publicData: PublicCatalog }) {
   return (
     <>
-      <PublicHeader />
-      <DataGate>
-        <CatalogContent />
-      </DataGate>
+      <PublicHeader brand={publicData.settings.brand} />
+      <CatalogContent data={publicData} />
     </>
   );
 }

@@ -9,6 +9,7 @@ import {
 } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
   Ticket,
@@ -17,7 +18,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useStore } from "../state/store";
-import { repository } from "../data/repository";
+import { sourceForPath } from "../data/source";
 
 const ToastContext = createContext<(message: string, error?: boolean) => void>(
   () => {},
@@ -61,14 +62,15 @@ export function WhatsAppAction({
   );
 }
 export function Providers({ children }: { children: ReactNode }) {
+  const source = sourceForPath(usePathname());
   const [toast, setToast] = useState<{
     message: string;
     error: boolean;
   } | null>(null);
   useEffect(() => {
-    void useStore.getState().load();
-    return repository.subscribe(() => void useStore.getState().load());
-  }, []);
+    if (source) void useStore.getState().load(source);
+    else useStore.getState().clear();
+  }, [source]);
   useEffect(() => {
     if (toast) {
       const timer = setTimeout(() => setToast(null), 5000);
@@ -99,37 +101,26 @@ export function Providers({ children }: { children: ReactNode }) {
   );
 }
 export function DataGate({ children }: { children: ReactNode }) {
-  const { data, error, reset } = useStore();
-  const toast = useToast();
-  if (error)
+  const { data, error, source } = useStore();
+  const expectedSource = sourceForPath(usePathname());
+  if (source === expectedSource && error)
     return (
       <div className="empty">
         <AlertCircle />
         <h2>No pudimos cargar tus datos</h2>
         <p>{error}</p>
-        <p>
-          Los datos existentes se conservan. Puedes reintentar o restablecer el
-          demo.
-        </p>
-        <button className="btn" onClick={() => void useStore.getState().load()}>
-          Reintentar
-        </button>
+        <p>Revisa la conexión e inténtalo de nuevo.</p>
         <button
-          className="btn secondary"
+          className="btn"
           onClick={() => {
-            if (
-              confirm(
-                "¿Reemplazar los datos locales por los ejemplos iniciales?",
-              )
-            )
-              void reset().catch((e) => toast(String(e), true));
+            if (expectedSource) void useStore.getState().load(expectedSource);
           }}
         >
-          Restablecer demo
+          Reintentar
         </button>
       </div>
     );
-  if (!data)
+  if (source !== expectedSource || !data)
     return (
       <div className="loading" role="status" aria-label="Cargando catálogo">
         <div className="skeleton title-skeleton" />
@@ -138,13 +129,16 @@ export function DataGate({ children }: { children: ReactNode }) {
             <div key={n} className="skeleton card-skeleton" />
           ))}
         </div>
-        <span className="sr-only">Cargando datos locales…</span>
+        <span className="sr-only">Cargando datos…</span>
       </div>
     );
   return children;
 }
-export function Brand() {
-  const brand = useStore((s) => s.data?.settings.brand ?? "Andrés Le Vende");
+export function Brand({ name }: { name?: string }) {
+  const localBrand = useStore(
+    (s) => s.data?.settings.brand ?? "Andrés Le Vende",
+  );
+  const brand = name ?? localBrand;
   return (
     <Link href="/" className="brand" aria-label={`${brand}, ir al catálogo`}>
       <Image
@@ -161,10 +155,10 @@ export function Brand() {
     </Link>
   );
 }
-export function PublicHeader() {
+export function PublicHeader({ brand }: { brand?: string }) {
   return (
     <header className="public-header wrap">
-      <Brand />
+      <Brand name={brand} />
       <Link href="/admin" className="admin-link">
         Panel de Andrés <ArrowUpRight size={16} />
       </Link>

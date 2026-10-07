@@ -151,7 +151,7 @@ export function EventForm({
       name: "",
       startDate: "",
       endDate: "",
-      city: "Bogotá",
+      city: "",
       venue: "",
       image: "",
       active: true,
@@ -172,11 +172,6 @@ export function EventForm({
           <Field name="startDate" label="Fecha de inicio" type="date" />
           <Field name="endDate" label="Fecha final (opcional)" type="date" />
           <Field name="venue" label="Lugar" />
-          <Field
-            name="image"
-            label="Imagen local (opcional)"
-            hint="Ruta dentro de public, por ejemplo /evento.svg"
-          />
           <ActiveField />
         </div>
         <FormError message={error} />
@@ -417,7 +412,6 @@ export function ReservationForm({
 export function SettingsForm() {
   const db = useStore((s) => s.data)!;
   const busy = useStore((s) => s.busy);
-  const toast = useToast();
   const form = useForm<Settings>({
     resolver: zodResolver(settingsSchema),
     defaultValues: db.settings,
@@ -472,33 +466,6 @@ export function SettingsForm() {
           Guardar configuración
         </button>
       </form>
-      <div className="reset-panel">
-        <h3>Datos de demostración</h3>
-        <p>
-          Restablece eventos, inventario, reservas y configuración. Se
-          reemplazan los cambios guardados en este navegador.
-        </p>
-        <button
-          className="btn danger"
-          onClick={() => {
-            if (
-              confirm(
-                "¿Restablecer el demo? Se reemplazarán todos los datos y la configuración de este navegador.",
-              )
-            )
-              void useStore
-                .getState()
-                .reset()
-                .then(() => {
-                  toast("Demo restablecido");
-                  window.location.reload();
-                })
-                .catch((e) => toast(String(e), true));
-          }}
-        >
-          Restablecer demo
-        </button>
-      </div>
     </FormProvider>
   );
 }

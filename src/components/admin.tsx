@@ -149,11 +149,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           })}
         </nav>
         <div className="sidebar-bottom">
-          <Badge tone="amber">Modo demo</Badge>
+          <Badge tone="neutral">Inventario en línea</Badge>
           <p>
             Tu operación, en un solo lugar.
             <br />
-            Datos guardados en este navegador.
+            Inventario compartido y protegido.
           </p>
           <Link href="/" className="nav-item">
             Ver catálogo público <ArrowUpRight size={18} />
@@ -174,7 +174,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
             {nav.find((n) => n.href === path)?.label ?? "Inventario del evento"}
           </span>
           <div className="admin-person">
-            <Badge tone="amber">Modo demo</Badge>
+            <Badge tone="neutral">Datos en línea</Badge>
             <span className="avatar">A</span>
             <strong>
               {isSupabaseConfigured() ? "Administrador" : "Andrés"}
