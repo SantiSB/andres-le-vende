@@ -98,7 +98,7 @@ Detén antes el servidor de desarrollo si utiliza ese puerto.
 
 ## Limitaciones deliberadas
 
-- Demo local de un único administrador, sin autenticación ni control real de acceso. La privacidad de la interfaz es visual: los datos internos existen en el navegador y el panel está abierto. No utilizar datos sensibles reales ni publicar esto como sistema operativo de producción.
+- El panel publicado exige Supabase Auth y autorización del único administrador, pero el inventario todavía es un demo en `localStorage`. No utilizar datos sensibles reales ni publicar esto como sistema operativo de producción.
 - No hay base de datos central: otros dispositivos no ven los cambios. La sincronización entre pestañas no ofrece transacciones entre usuarios ni garantía de evitar sobreventa concurrente en producción.
 - Borrar los datos del navegador elimina el inventario del demo. No hay copia de seguridad remota.
 - No hay login de compradores/vendedores, pagos, comprobantes, escrow, transferencia de boletas ni automatización del envío de mensajes.
@@ -115,7 +115,7 @@ ya están preparados como módulo 3. La migración se aplicó manualmente el 7 d
 
 El módulo 4 preparó el login con Supabase Auth en `/ingresar`, la activación de invitaciones en `/auth/complete`, la creación de contraseña en `/establecer-clave` y una comprobación de administrador en el servidor para todas las rutas `/admin`. La comprobación consulta la fila de `settings`, que RLS solo deja leer al identificador incluido en `admin_users`. No se confía únicamente en una cookie ni en ocultar la interfaz. Sin variables de Supabase, el panel conserva el demo local solo en desarrollo; un despliegue sin Auth configurado no permite entrar a `/admin`.
 
-Para desarrollo, copia `.env.example` a `.env.local` y completa la URL y la clave **publicable** del proyecto; no uses una clave secreta ni de servicio en el navegador. El proyecto local ya tiene estos valores en un archivo ignorado por Git. En Vercel, esas dos variables se configuraron únicamente para Production. El Site URL de Supabase apunta a `https://andres-le-vende.vercel.app/auth/complete` para recibir invitaciones estándar; la ruta debe estar desplegada antes de enviar una invitación. Sigue pendiente invitar al administrador temporal y registrar su ID en `admin_users`.
+Para desarrollo, copia `.env.example` a `.env.local` y completa la URL y la clave **publicable** del proyecto; no uses una clave secreta ni de servicio en el navegador. El proyecto local ya tiene estos valores en un archivo ignorado por Git. En Vercel, esas dos variables están configuradas únicamente para Production. El Site URL de Supabase apunta a `https://andres-le-vende.vercel.app/auth/complete` para recibir invitaciones estándar. Se invitó a la cuenta de prueba autorizada y se registró su ID como única fila de `admin_users`; el registro libre de usuarios está desactivado. La persona invitada debe establecer su propia contraseña mediante el correo y validar el acceso antes de usar el panel.
 
 1. Crear tablas de eventos, localidades, lotes y reservas con claves foráneas, restricciones e índices. Conservar snapshots monetarios en reservas.
 2. Separar la lectura pública del acceso administrativo. Exponer al catálogo una vista/consulta que contenga solo campos públicos y agregados, nunca nombres, teléfonos, costos ni notas. El contrato actual carga el estado entero para el demo; producción debe dividir esa lectura y sus suscripciones.
