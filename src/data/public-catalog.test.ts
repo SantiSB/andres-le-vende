@@ -40,4 +40,18 @@ describe("proyección pública", () => {
   it("no sustituye un catálogo vacío por el inventario demo", () => {
     expect(mapPublicCatalog([]).events).toEqual([]);
   });
+
+  it("mantiene la marca configurada aun cuando no hay boletas", () => {
+    expect(
+      mapPublicCatalog([], {
+        brand: "Marca actual",
+        whatsapp_phone: "573001234567",
+        buyer_template: "Hola, {evento}",
+      }).settings,
+    ).toEqual({
+      brand: "Marca actual",
+      phone: "573001234567",
+      buyerTemplate: "Hola, {evento}",
+    });
+  });
 });

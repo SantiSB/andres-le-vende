@@ -11,7 +11,7 @@ La aplicación usa un único proyecto Supabase para los datos y Supabase Auth pa
 Requiere Node.js 22 o 24 y pnpm 12.3.4.
 
 1. Copia `.env.example` a `.env.local` y completa la URL y clave **publicable** de Supabase. Nunca pongas una clave de servicio en `NEXT_PUBLIC_*`.
-2. Aplica las migraciones de `supabase/migrations/` en orden en una base nueva. En el proyecto `andres-le-vende-dev` las tres ya fueron aplicadas manualmente.
+2. Aplica las migraciones de `supabase/migrations/` en orden en una base nueva. En el proyecto `andres-le-vende-dev` ya fueron aplicadas manualmente.
 3. Crea/invita el usuario de Auth y registra su UUID como única fila en `public.admin_users`. Desactiva el registro libre. El administrador establece su contraseña desde el correo; no necesita usar el dashboard de Supabase.
 4. Ejecuta `pnpm install --frozen-lockfile` y `pnpm dev --hostname 127.0.0.1 --port 3002`.
 

@@ -18,13 +18,23 @@ const rowSchema = z.object({
   whatsapp_phone: z.string(),
   buyer_template: z.string(),
 });
+const siteSettingsSchema = z.object({
+  brand: z.string(),
+  whatsapp_phone: z.string(),
+  buyer_template: z.string(),
+});
 
 export type PublicCatalog = {
   events: ReturnType<typeof catalog>;
   settings: { brand: string; phone: string; buyerTemplate: string };
 };
 
-export function mapPublicCatalog(raw: unknown): PublicCatalog {
+export function mapPublicCatalog(
+  raw: unknown,
+  siteSettings?: unknown,
+): PublicCatalog {
+  const publicSettings =
+    siteSettings === undefined ? null : siteSettingsSchema.parse(siteSettings);
   const rows = z
     .array(rowSchema)
     .parse(raw)
@@ -68,9 +78,10 @@ export function mapPublicCatalog(raw: unknown): PublicCatalog {
       a.startDate.localeCompare(b.startDate),
     ),
     settings: {
-      brand: rows[0]?.brand ?? "Andrés Le Vende",
-      phone: rows[0]?.whatsapp_phone ?? "",
-      buyerTemplate: rows[0]?.buyer_template ?? "",
+      brand: publicSettings?.brand ?? rows[0]?.brand ?? "Andrés Le Vende",
+      phone: publicSettings?.whatsapp_phone ?? rows[0]?.whatsapp_phone ?? "",
+      buyerTemplate:
+        publicSettings?.buyer_template ?? rows[0]?.buyer_template ?? "",
     },
   };
 }
