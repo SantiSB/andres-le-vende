@@ -11,7 +11,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
-  ArrowUpRight,
   Ticket,
   X,
   CheckCircle2,
@@ -159,9 +158,6 @@ export function PublicHeader({ brand }: { brand?: string }) {
   return (
     <header className="public-header wrap">
       <Brand name={brand} />
-      <Link href="/admin" className="admin-link">
-        Panel de Andrés <ArrowUpRight size={16} />
-      </Link>
     </header>
   );
 }

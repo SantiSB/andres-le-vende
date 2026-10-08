@@ -117,12 +117,6 @@ textarea:focus-visible {
 .public-header {
   height: 118px;
 }
-.public-header .admin-link {
-  color: var(--brand-navy);
-}
-.public-header .admin-link:hover {
-  color: var(--brand-red-dark);
-}
 .eyebrow {
   color: #9f422e;
 }
@@ -400,8 +394,5 @@ textarea:focus-visible {
   }
   .brand-logo {
     height: 68px;
-  }
-  .admin-link {
-    font-size: 9px;
   }
 }

@@ -138,14 +138,6 @@ hr {
   height: 102px;
   border-bottom: 1px solid var(--line);
 }
-.admin-link {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 12px 0;
-}
 .hero {
   padding-top: 65px;
   padding-bottom: 48px;
@@ -1568,10 +1560,6 @@ hr {
   .brand-icon {
     width: 37px;
     height: 37px;
-  }
-  .admin-link {
-    font-size: 10px;
-    gap: 5px;
   }
   .hero {
     padding-top: 39px;

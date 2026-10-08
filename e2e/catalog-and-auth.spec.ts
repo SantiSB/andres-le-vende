@@ -19,6 +19,7 @@ test("el catálogo real no carga el demo y mantiene la búsqueda responsive", as
   ).toBeVisible();
   await expect(page.locator("main")).not.toContainText("Demo interactivo");
   await expect(page.locator("main")).not.toContainText("Restablecer demo");
+  await expect(page.locator("header a[href^='/admin']")).toHaveCount(0);
   await noOverflow(page);
 
   const hasEvents = (await page.locator(".event-card").count()) > 0;
