@@ -1,5 +1,5 @@
 "use client";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ChangeEvent, type ReactNode } from "react";
 import {
   FormProvider,
   useForm,
@@ -26,6 +26,7 @@ import { suggestedPrice, quantities } from "../domain/logic";
 import { cop } from "../domain/format";
 import { useStore } from "../state/store";
 import { useToast } from "./ui";
+import { removeEventFlyer, uploadEventFlyer } from "../data/event-flyers";
 
 function Field({
   name,
@@ -157,15 +158,61 @@ export function EventForm({
       active: true,
     },
   });
-  const { submit, error } = useSubmit(onClose);
+  const run = useStore((s) => s.run);
+  const busy = useStore((s) => s.busy);
+  const toast = useToast();
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+  const image = useWatch({ control: form.control, name: "image" });
+  useEffect(
+    () => () => {
+      if (preview) URL.revokeObjectURL(preview);
+    },
+    [preview],
+  );
+
+  function selectFile(change: ChangeEvent<HTMLInputElement>) {
+    setError("");
+    const nextFile = change.target.files?.[0] ?? null;
+    setFile(nextFile);
+    setPreview(nextFile ? URL.createObjectURL(nextFile) : "");
+  }
+
+  async function save(input: EventInput) {
+    if (uploading || busy) return;
+    setUploading(true);
+    setError("");
+    let uploadedUrl = "";
+    try {
+      if (file) uploadedUrl = await uploadEventFlyer(file);
+      const nextImage = uploadedUrl || input.image;
+      await run({
+        type: "event.save",
+        input: { ...input, image: nextImage },
+        id: event?.id,
+      });
+      if (event?.image && event.image !== nextImage) {
+        await removeEventFlyer(event.image).catch(() => undefined);
+      }
+      toast("Evento guardado");
+      onClose();
+    } catch (cause) {
+      if (uploadedUrl)
+        await removeEventFlyer(uploadedUrl).catch(() => undefined);
+      setError(
+        cause instanceof Error
+          ? cause.message
+          : "No se pudo guardar el evento.",
+      );
+    } finally {
+      setUploading(false);
+    }
+  }
   return (
     <FormProvider {...form}>
-      <form
-        className="form"
-        onSubmit={form.handleSubmit((input) =>
-          submit({ type: "event.save", input, id: event?.id }),
-        )}
-      >
+      <form className="form" onSubmit={form.handleSubmit(save)}>
         <div className="form-grid">
           <Field name="name" label="Nombre del evento" />
           <Field name="city" label="Ciudad" />
@@ -173,12 +220,61 @@ export function EventForm({
           <Field name="endDate" label="Fecha final (opcional)" type="date" />
           <Field name="venue" label="Lugar" />
           <ActiveField />
+          <div className="field full">
+            <label htmlFor="event-flyer">Flyer del evento (opcional)</label>
+            <input
+              id="event-flyer"
+              type="file"
+              accept="image/*"
+              onChange={selectFile}
+              disabled={uploading || busy}
+            />
+            <small>
+              Se adapta al formato 4:5 (hasta 1080 × 1350 px) y se comprime a
+              un máximo de 600 KB antes de subirlo. Se conserva el flyer
+              completo.
+            </small>
+            {(preview || image) && (
+              <div className="flyer-preview">
+                {/* La vista previa puede ser un blob temporal o una URL pública. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={preview || image} alt="Vista previa del flyer" />
+                <button
+                  type="button"
+                  className="text-btn"
+                  disabled={uploading || busy}
+                  onClick={() => {
+                    setFile(null);
+                    setPreview("");
+                    form.setValue("image", "");
+                    const input = document.getElementById("event-flyer");
+                    if (input instanceof HTMLInputElement) input.value = "";
+                  }}
+                >
+                  Quitar flyer
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         <FormError message={error} />
-        <Actions
-          onClose={onClose}
-          label={event ? "Guardar evento" : "Crear evento"}
-        />
+        <div className="form-actions">
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={onClose}
+            disabled={uploading || busy}
+          >
+            Cancelar
+          </button>
+          <button className="btn" disabled={uploading || busy}>
+            {uploading
+              ? "Preparando flyer…"
+              : event
+                ? "Guardar evento"
+                : "Crear evento"}
+          </button>
+        </div>
       </form>
     </FormProvider>
   );

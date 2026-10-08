@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { validEventImage } from "./event-image";
 
 z.config(z.locales.es());
 
@@ -19,13 +20,7 @@ export const eventSchema = z
     endDate: z.union([date, z.literal("")]),
     city: name,
     venue: name,
-    image: z
-      .string()
-      .refine(
-        (v) =>
-          !v || (v.startsWith("/") && !v.startsWith("//") && !v.includes("..")),
-        "Usa una ruta local, por ejemplo /evento.svg",
-      ),
+    image: z.string().refine(validEventImage, "Selecciona un flyer válido."),
     active: z.boolean(),
   })
   .refine((v) => !v.endDate || v.endDate >= v.startDate, {

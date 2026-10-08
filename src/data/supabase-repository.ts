@@ -10,6 +10,7 @@ import {
 import { createClient } from "../lib/supabase/browser";
 import type { Repository } from "./repository";
 import { loadSupabaseAdmin } from "./supabase-admin-read";
+import { removeEventFlyer } from "./event-flyers";
 
 const finalPrice = z.number().int().min(0).max(100_000_000);
 
@@ -141,6 +142,16 @@ export class SupabaseRepository implements Repository {
       error = result.error;
       changed = Boolean(result.data);
     } else if (command.type === "delete") {
+      const oldImage =
+        command.entity === "event"
+          ? (
+              await supabase
+                .from("events")
+                .select("image_path")
+                .eq("id", command.id)
+                .single()
+            ).data?.image_path
+          : null;
       const table =
         command.entity === "event"
           ? "events"
@@ -155,6 +166,11 @@ export class SupabaseRepository implements Repository {
         .single();
       error = result.error;
       changed = Boolean(result.data);
+      if (!error && changed && oldImage) {
+        // La eliminación del registro es la operación principal. Si falla la
+        // limpieza del archivo, no deshacemos una eliminación ya confirmada.
+        await removeEventFlyer(oldImage).catch(() => undefined);
+      }
     }
 
     if (error) throw new Error(error.message);

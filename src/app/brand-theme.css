@@ -13,6 +13,28 @@
   --lime: var(--brand-orange);
 }
 
+/* Formato vertical de publicación de Instagram, sin recortar el flyer. */
+.poster {
+  height: auto;
+  aspect-ratio: 4 / 5;
+}
+
+.flyer-preview {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.flyer-preview img {
+  display: block;
+  width: 136px;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  border-radius: 9px;
+  background: var(--brand-navy);
+}
+
 .login-page {
   min-height: 100vh;
   display: grid;

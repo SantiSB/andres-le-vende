@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { catalog } from "../domain/logic";
+import { validEventImage } from "../domain/event-image";
 
 const rowSchema = z.object({
   event_id: z.string().uuid(),
@@ -55,10 +56,7 @@ export function mapPublicCatalog(
       endDate: row.end_date ?? "",
       city: row.city,
       venue: row.venue,
-      image:
-        row.image_path.startsWith("/") && !row.image_path.startsWith("//")
-          ? row.image_path
-          : "",
+      image: validEventImage(row.image_path) ? row.image_path : "",
       localities: [],
       quantity: 0,
       price: row.price,
